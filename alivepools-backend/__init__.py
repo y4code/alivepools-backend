@@ -37,11 +37,11 @@ def create_app(test_config=None):
     # Move the import statements here
     from . import auth
     from . import domain
-    from . import email_sender
+    from . import email
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(domain.bp)
-    app.register_blueprint(email_sender.bp)
+    app.register_blueprint(email.bp)
 
     return app
 

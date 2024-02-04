@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, Blueprint
 from flask_jwt_extended import JWTManager, create_access_token
 import random
-from .email_sender import send_custom_email
+from .email import send_custom_email
 
 otp_storage = {}
 
@@ -20,7 +20,7 @@ def signin():
     # 发送邮件的逻辑（这里仅为示例，需要实现实际发送逻辑）
     subject = "Your OTP"
     body = f"Your OTP is {otp}"
-    # send_custom_email(email, subject, body)  # 使用自定义的发送邮件函数
+    send_custom_email(email, subject, body)  # 使用自定义的发送邮件函数
     # log
     print(f"OTP for {email} is {otp}")
     return jsonify({"message": "OTP sent successfully"}), 200
