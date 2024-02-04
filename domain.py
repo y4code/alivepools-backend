@@ -3,8 +3,8 @@ import requests
 
 app = Flask(__name__)
 
-@app.route("/check", methods=["GET"])
-def check_website():
+@app.route("/domain", methods=["GET"])
+def check_by_domain():
     website = request.args.get("website")
     try:
         response = requests.get("http://" + website)
