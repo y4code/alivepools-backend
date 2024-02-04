@@ -1,11 +1,11 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, Blueprint, request
 import requests
 
+# Create a blueprint object
+bp = Blueprint('email_sender', __name__)
 
-app = Flask(__name__)
-
-# @xuyao this should not be a api
-@app.route("/send_email")
+# Define routes within the blueprint
+@bp.route("/send_email")
 def send_simple_message():
     response = requests.post(
         "https://api.mailgun.net/v3/sandboxab84a42814d340b1929b218768aad10b.mailgun.org/messages",
@@ -24,7 +24,8 @@ def send_simple_message():
         # Returning a simple error message and status code if the request failed
         return jsonify({"error": "Failed to send email", "details": response.text}), 500
 
-def send_custom_message():
+# Define another route within the blueprint
+def send_custom_email():
     recipient = request.args.get('recipient')
     subject = request.args.get('subject')
     message = request.args.get('message')

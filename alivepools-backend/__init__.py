@@ -15,7 +15,6 @@ def create_app(test_config=None):
     # Initialize JWTManager
     jwt = JWTManager(app)
 
-
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)
@@ -34,5 +33,17 @@ def create_app(test_config=None):
 
     # Register the blueprint
     app.register_blueprint(bp)
-    
+
+    # Move the import statements here
+    from . import auth
+    from . import domain
+    from . import email_sender
+
+    app.register_blueprint(auth.bp)
+    app.register_blueprint(domain.bp)
+    app.register_blueprint(email_sender.bp)
+
     return app
+
+# Apply the blueprint to the app
+app = create_app()

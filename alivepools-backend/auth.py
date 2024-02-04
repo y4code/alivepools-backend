@@ -1,15 +1,14 @@
 from flask import Flask, jsonify, request, Blueprint
 from flask_jwt_extended import JWTManager, create_access_token
 import random
+from .email_sender import send_custom_email
 
-# TODO: project scaffold，setup 导入不成功
-# from email_sender import send_custom_email
-from email_sender import send_custom_email
+otp_storage = {}
 
 # Create a blueprint for the authentication routes
-auth_bp = Blueprint('auth', __name__)
+bp = Blueprint('auth', __name__)
 
-@auth_bp.route('/user/signin', methods=['POST'])
+@bp.route('/user/signin', methods=['POST'])
 def signin():
     email = request.json.get('email', None)
     if not email:
@@ -26,7 +25,7 @@ def signin():
     print(f"OTP for {email} is {otp}")
     return jsonify({"message": "OTP sent successfully"}), 200
 
-@auth_bp.route('/user/signin/confirmation', methods=['POST'])
+@bp.route('/user/signin/confirmation', methods=['POST'])
 def confirm_otp():
     email = request.json.get('email', None)
     otp = request.json.get('otp', None)
