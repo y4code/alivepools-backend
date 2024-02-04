@@ -11,3 +11,8 @@ pip3 install -r requirements.txt
 ```shell
 pip3 freeze > requirements.txt
 ```
+
+# Run
+```shell
+flask --app alivepools-backend run
+```
