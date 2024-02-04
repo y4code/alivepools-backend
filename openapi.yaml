@@ -1,0 +1,176 @@
+openapi: "3.0.2"
+info:
+  title: Alivepools
+  version: "1.0"
+servers:
+  - url: https://alivepools.io/api/
+paths:
+  /user/signin:
+    post:
+      tags:
+        - User Authentication
+      summary: Generate one time password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        "200":
+          description: OTP sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "400":
+          description: Bad request
+  /user/signin/confirmation:
+    post:
+      tags:
+        - User Authentication
+      summary: Confirm one time password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                otp:
+                  type: string
+      responses:
+        "200":
+          description: Sign-in successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        "401":
+          description: Unauthorized
+  /domain:
+    get:
+      tags:
+        - Domain (appliable to unauthorized and authorized users)
+      summary: Get domain
+      responses:
+        "200":
+          description: Domain information retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  info:
+                    type: string
+        "404":
+          description: Not found
+  /job/{jobId}:
+    get:
+      tags:
+        - "Job"
+      summary: Get job by ID
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Job details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        "404":
+          description: Job not found
+    put:
+      tags:
+        - "Job"
+      summary: Update job by ID
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Job"
+      responses:
+        "200":
+          description: Job updated successfully
+    delete:
+      tags:
+        - "Job"
+      summary: Delete job by ID
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Job deleted successfully
+  /jobs:
+    get:
+      tags:
+        - "Job"
+      summary: Get all jobs
+      responses:
+        "200":
+          description: Jobs list retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Job"
+    post:
+      tags:
+        - "Job"
+      summary: Create a new job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Job"
+      responses:
+        "200":
+          description: New job created successfully
+components:
+  schemas:
+    Job:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+security:
+  - bearerAuth: []
