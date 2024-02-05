@@ -3,8 +3,8 @@
 import os
 from flask import Flask, Blueprint
 from flask_jwt_extended import JWTManager
-from apscheduler.schedulers.background import BackgroundScheduler
-from .job import execute_jobs
+# from apscheduler.schedulers.background import BackgroundScheduler
+# from .job import execute_jobs
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -48,9 +48,9 @@ def create_app(test_config=None):
     app.register_blueprint(database.bp)
 
     # 初始化 APScheduler 并注册定时任务
-    scheduler = BackgroundScheduler(daemon=True)
-    scheduler.add_job(execute_jobs, 'interval', minutes=1)
-    scheduler.start()
+    # scheduler = BackgroundScheduler(daemon=True)
+    # scheduler.add_job(execute_jobs, 'interval', minutes=1)
+    # scheduler.start()
 
     return app
 
