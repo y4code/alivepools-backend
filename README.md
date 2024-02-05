@@ -17,8 +17,13 @@ pip3 freeze > requirements.txt
 flask --app alivepools-backend run
 ```
 
-About Caddyfile
-Just run command below to start caddy server in background
+or
+```shell
+flask --app alivepools-backend run --host=0.0.0.0
 ```
+
+# About Caddyfile
+Just run command below to start caddy server in background
+```shell
 caddy start
 ```
