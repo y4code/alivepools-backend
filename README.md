@@ -15,4 +15,6 @@ pip3 freeze > requirements.txt
 # Run
 ```shell
 flask --app alivepools-backend run
+or
+flask --app alivepools-backend run --host=0.0.0.0 --port=80
 ```
