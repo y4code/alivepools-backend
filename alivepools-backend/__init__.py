@@ -16,7 +16,6 @@ def create_app(test_config=None):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://doadmin:AVNS_XZO6vDqdYsFGGBA2G8W@db-mysql-sgp1-19924-do-user-15764718-0.c.db.ondigitalocean.com:25060/defaultdb'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
    
-
     db.init_app(app)
 
     app.config.from_mapping(

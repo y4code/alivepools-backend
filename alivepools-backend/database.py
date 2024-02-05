@@ -5,13 +5,6 @@ from . import db
 # Create a blueprint
 bp = Blueprint('database', __name__)
 
-# db = SQLAlchemy()
-
-# Configuration for your database URI using Blueprints
-# app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://doadmin:AVNS_XZO6vDqdYsFGGBA2G8W@db-mysql-sgp1-19924-do-user-15764718-0.c.db.ondigitalocean.com:25060/defaultdb'
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
