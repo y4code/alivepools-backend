@@ -1,13 +1,16 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Blueprint
 from flask_sqlalchemy import SQLAlchemy
-import os
+from . import db
 
-app = Flask(__name__)
+# Create a blueprint
+bp = Blueprint('database', __name__)
 
-# Configuration for your database URI
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://doadmin:AVNS_XZO6vDqdYsFGGBA2G8W@db-mysql-sgp1-19924-do-user-15764718-0.c.db.ondigitalocean.com:25060/defaultdb'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+# db = SQLAlchemy()
+
+# Configuration for your database URI using Blueprints
+# app = Flask(__name__)
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://doadmin:AVNS_XZO6vDqdYsFGGBA2G8W@db-mysql-sgp1-19924-do-user-15764718-0.c.db.ondigitalocean.com:25060/defaultdb'
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -21,10 +24,11 @@ class Tasks(db.Model):
     domain = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
     send_frequency = db.Column(db.String(50), nullable=False)
+    create_at = db.Column(db.DateTime, server_default=db.func.now())
     user = db.relationship('Users', backref=db.backref('tasks', lazy=True))
 
 # Create a user
-@app.route('/create_user', methods=['POST'])
+@bp.route('/create_user', methods=['POST'])
 def create_user():
     data = request.json
     user = Users(email=data['email'], email_status=data['email_status'], password=data['password'])
@@ -33,7 +37,7 @@ def create_user():
     return jsonify({'message': 'User created successfully'}), 201
 
 #Query all users
-@app.route('/query_users', methods=['GET'])
+@bp.route('/query_users', methods=['GET'])
 def query_users():
     users = Users.query.all()
     users_list = []
@@ -42,13 +46,13 @@ def query_users():
     return jsonify({'users': users_list}), 200
 
 # Query a user by id
-@app.route('/query_user_by_id/<int:id>', methods=['GET'])
+@bp.route('/query_user_by_id/<int:id>', methods=['GET'])
 def query_user_by_id(id):
     user = Users.query.get_or_404(id)
     return jsonify({'email': user.email, 'email_status': user.email_status}), 200
 
 # Query a user by email
-@app.route('/query_user_by_email/<string:email>', methods=['GET'])
+@bp.route('/query_user_by_email/<string:email>', methods=['GET'])
 def query_user_by_email(email):
     user = Users.query.filter_by(email=email).first()
     if user:
@@ -57,7 +61,7 @@ def query_user_by_email(email):
         return jsonify({'message': 'User not found'}), 404
 
 # Delete a user
-@app.route('/delete_user/<int:id>', methods=['DELETE'])
+@bp.route('/delete_user/<int:id>', methods=['DELETE'])
 def delete_user(id):
     user = Users.query.get_or_404(id)
     db.session.delete(user)
@@ -65,7 +69,7 @@ def delete_user(id):
     return jsonify({'message': 'User deleted successfully'}), 200
 
 # Create a task
-@app.route('/create_task', methods=['POST'])
+@bp.route('/create_task', methods=['POST'])
 def create_task():
     data = request.json
     task = Tasks(user_id=data['user_id'], domain=data['domain'], email=data['email'], send_frequency=data['send_frequency'])
@@ -74,9 +78,11 @@ def create_task():
     return jsonify({'message': 'Task created successfully'}), 201
 
 # Delete a task
-@app.route('/delete_task/<int:id>', methods=['DELETE'])
+@bp.route('/delete_task/<int:id>', methods=['DELETE'])
 def delete_task(id):
     task = Tasks.query.get_or_404(id)
     db.session.delete(task)
     db.session.commit()
     return jsonify({'message': 'Task deleted successfully'}), 200
+
+
