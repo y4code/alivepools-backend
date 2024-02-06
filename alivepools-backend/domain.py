@@ -14,7 +14,7 @@ def check_by_domain():
             return jsonify({"message": "Website is available"}), 200
         else:
             # If the server returns a status code other than 200, it's considered unavailable for this purpose
-            return jsonify({"message": "Website not found"}), 404
+            return jsonify({"message": "Website is not available"}), 200
     except requests.exceptions.RequestException:
         # If the GET request fails (e.g., due to a network problem or invalid URL), the website is considered not found
-        return jsonify({"message": "Website not found"}), 404
+        return jsonify({"message": "Website not found"}), 200
