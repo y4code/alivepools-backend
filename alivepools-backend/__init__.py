@@ -1,4 +1,5 @@
 # app.py 或 create_app.py
+# 基础配置
 
 import os
 from flask import Flask, Blueprint

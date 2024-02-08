@@ -1,3 +1,5 @@
+# 邮件的模版和发送
+
 from flask import Flask, jsonify, Blueprint, request
 import requests
 

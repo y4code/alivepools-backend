@@ -1,3 +1,5 @@
+# 定时任务的注册和启动
+
 from apscheduler.schedulers.background import BackgroundScheduler
 
 def init_scheduler():

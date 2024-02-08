@@ -1,3 +1,5 @@
+# 数据库模型
+
 from flask import Blueprint
 from . import db
 

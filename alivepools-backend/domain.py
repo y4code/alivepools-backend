@@ -1,3 +1,5 @@
+# 域名的可用性检查
+
 from flask import Flask, request, jsonify, Blueprint
 import requests
 

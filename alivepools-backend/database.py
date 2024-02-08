@@ -1,3 +1,5 @@
+# 数据库操作
+
 from flask import Flask, jsonify, request, Blueprint
 from flask_sqlalchemy import SQLAlchemy
 from . import db
@@ -58,31 +60,14 @@ def create_task():
     db.session.commit()
     return jsonify({'message': 'Task created successfully'}), 201
 
-# Query task by next_run_time <= now and status = 'active'
-def query_tasks_need_to_run():
-    with current_app.app_context():
-        now = datetime.utcnow()
-        tasks = Tasks.query.filter(
-            Tasks.next_run_time <= now, 
-            Tasks.status == 'active').all()
-        tasks_list = []
-        for task in tasks:
-            tasks_list.append({'id': task.id, 'user_id': task.user_id, 'domain': task.domain, 'email': task.email, 'send_frequency': task.send_frequency, 'status': task.status, 'last_run_time': task.last_run_time, 'next_run_time': task.next_run_time})
-        return jsonify({'tasks': tasks_list}), 200
-
-# Update the last_run_time of a task
-def update_last_run_time(id, last_run_time):
-    task = Tasks.query.get_or_404(id)
-    task.last_run_time = last_run_time
-    db.session.commit()
-    return jsonify({'message': 'Last run time updated successfully'}), 200
-
-# Update the next_run_time of a task
-def update_next_run_time(id, next_run_time):
-    task = Tasks.query.get_or_404(id)
-    task.next_run_time = next_run_time
-    db.session.commit()
-    return jsonify({'message': 'Next run time updated successfully'}), 200
+# Query all tasks by user id
+@bp.route('/query_tasks_by_user_id/<int:id>', methods=['GET'])
+def query_tasks_by_user_id(id):
+    tasks = Tasks.query.filter_by(user_id=id).all()
+    tasks_list = []
+    for task in tasks:
+        tasks_list.append({'domain': task.domain, 'email': task.email, 'send_frequency': task.send_frequency})
+    return jsonify({'tasks': tasks_list}), 200
 
 # Delete a task
 @bp.route('/delete_task/<int:id>', methods=['DELETE'])
@@ -91,5 +76,3 @@ def delete_task(id):
     db.session.delete(task)
     db.session.commit()
     return jsonify({'message': 'Task deleted successfully'}), 200
-
-
