@@ -10,7 +10,7 @@ bp = Blueprint('database', __name__)
 @bp.route('/create_user', methods=['POST'])
 def create_user():
     data = request.json
-    user = Users(email=data['email'], email_status=data['email_status'], password=data['password'])
+    user = Users(email=data['email'], email_status=data['email_status'], password=data['password'], create_at=data['create_at'])
     db.session.add(user)
     db.session.commit()
     return jsonify({'message': 'User created successfully'}), 201
@@ -51,7 +51,7 @@ def delete_user(id):
 @bp.route('/create_task', methods=['POST'])
 def create_task():
     data = request.json
-    task = Tasks(user_id=data['user_id'], domain=data['domain'], email=data['email'], send_frequency=data['send_frequency'])
+    task = Tasks(user_id=data['user_id'], domain=data['domain'], email=data['email'], send_frequency=data['send_frequency'], create_at=data['create_at'])
     db.session.add(task)
     db.session.commit()
     return jsonify({'message': 'Task created successfully'}), 201

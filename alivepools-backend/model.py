@@ -1,5 +1,4 @@
-from flask import Flask, jsonify, request, Blueprint
-from flask_sqlalchemy import SQLAlchemy
+from flask import Blueprint
 from . import db
 
 # Create a blueprint
