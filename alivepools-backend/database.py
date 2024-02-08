@@ -55,7 +55,7 @@ def delete_user(id):
 @bp.route('/create_task', methods=['POST'])
 def create_task():
     data = request.json
-    task = Tasks(user_id=data['user_id'], domain=data['domain'], email=data['email'], send_frequency=data['send_frequency'], create_at=data['create_at'])
+    task = Tasks(user_id=data['user_id'], domain=data['domain'], email=data['email'], send_frequency=data['send_frequency'], status=data['status'])
     db.session.add(task)
     db.session.commit()
     return jsonify({'message': 'Task created successfully'}), 201
@@ -66,7 +66,7 @@ def query_tasks_by_user_id(id):
     tasks = Tasks.query.filter_by(user_id=id).all()
     tasks_list = []
     for task in tasks:
-        tasks_list.append({'domain': task.domain, 'email': task.email, 'send_frequency': task.send_frequency})
+        tasks_list.append({'domain': task.domain, 'email': task.email, 'send_frequency': task.send_frequency, 'created_at': task.created_at, 'status': task.status, 'last_run_time': task.last_run_time, 'next_run_time': task.next_run_time})
     return jsonify({'tasks': tasks_list}), 200
 
 # Delete a task
