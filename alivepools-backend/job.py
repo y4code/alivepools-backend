@@ -1,17 +1,30 @@
-# from datetime import datetime, timedelta
-# import time
-# from .database import tasks
-# from .email import send_custom_email
+from datetime import datetime, timedelta
+import time
+from flask import Flask, jsonify, request, Blueprint
+from .email import send_custom_email
+from .model import Tasks
+from . import db
+from flask import current_app
 
 
-# # TODO 未调试
-# def execute_jobs():
-#     while True:
-#         now = datetime.utcnow()
-#         tasks = Tasks.query.filter(Task.next_run_time <= now, Task.status == 'active').all()
-#         for task in tasks:
-#             send_custom_email("recipient@example.com", task.title, task.description)
-#             task.last_run_time = now
-#             task.next_run_time = now + timedelta(minutes=1)  # 假设每个任务都是每分钟运行，这应根据task.frequency来计算
-#             db.session.commit()
-#         time.sleep(60)  # 每60秒检查一次
+# Create a blueprint
+bp = Blueprint('job', __name__)
+
+# TODO 未调试
+def execute_jobs():
+    from . import app
+    with app.app_context():
+        now = datetime.utcnow()
+        tasks = Tasks.query.filter(
+            Tasks.next_run_time <= now, 
+            Tasks.status == 'active').all()
+        
+        for task in tasks:
+            print(f"Executing task {task.id}")
+            send_custom_email("yaoyishi@gmail.com",
+                                subject = "Job Test", 
+                                message = "This is a test email")
+            
+            task.last_run_time = now
+            task.next_run_time = now + timedelta(seconds=task.send_frequency)  # 假设每个任务都是每分钟运行，这应根据task.frequency来计算
+            db.session.commit()

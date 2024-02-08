@@ -3,11 +3,12 @@
 import os
 from flask import Flask, Blueprint
 from flask_jwt_extended import JWTManager
-# from apscheduler.schedulers.background import BackgroundScheduler
-# from .job import execute_jobs
+from apscheduler.schedulers.background import BackgroundScheduler
+
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
+
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -18,6 +19,10 @@ def create_app(test_config=None):
    
     db.init_app(app)
 
+    # 初始化 APScheduler 并注册定时任务
+    from .scheduler import init_scheduler
+    init_scheduler()
+
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
@@ -26,7 +31,6 @@ def create_app(test_config=None):
     app.config['JWT_SECRET_KEY'] = 'your_secret_key_here'
 
     jwt = JWTManager(app)
-
 
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True)
@@ -41,17 +45,13 @@ def create_app(test_config=None):
     bp = Blueprint('my_blueprint', __name__)
     app.register_blueprint(bp)
 
-    from . import auth, domain, email, model, database
+    from . import auth, domain, email, model, database, job
     app.register_blueprint(auth.bp)
     app.register_blueprint(domain.bp)
     app.register_blueprint(email.bp)
     app.register_blueprint(model.bp)
     app.register_blueprint(database.bp)
-
-    # 初始化 APScheduler 并注册定时任务
-    # scheduler = BackgroundScheduler(daemon=True)
-    # scheduler.add_job(execute_jobs, 'interval', minutes=1)
-    # scheduler.start()
+    app.register_blueprint(job.bp)
 
     return app
 
