@@ -41,10 +41,11 @@ def create_app(test_config=None):
     bp = Blueprint('my_blueprint', __name__)
     app.register_blueprint(bp)
 
-    from . import auth, domain, email, database
+    from . import auth, domain, email, model, database
     app.register_blueprint(auth.bp)
     app.register_blueprint(domain.bp)
     app.register_blueprint(email.bp)
+    app.register_blueprint(model.bp)
     app.register_blueprint(database.bp)
 
     # 初始化 APScheduler 并注册定时任务
