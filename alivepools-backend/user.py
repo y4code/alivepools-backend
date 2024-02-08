@@ -1,4 +1,4 @@
-# 常规用户登陆以及用户信息的逻辑
+# 常规用户登陆以及用户信息的逻辑? 是否和 auth.py 重复了?
 
 from flask import request, jsonify, Blueprint
 from .model import Users
