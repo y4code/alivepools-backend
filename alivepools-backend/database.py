@@ -56,6 +56,8 @@ def delete_user(id):
 def create_task():
     data = request.json
     task = Tasks(user_id=data['user_id'], domain=data['domain'], email=data['email'], send_frequency=data['send_frequency'], status=data['status'])
+    task.last_run_time = datetime.utcnow()
+    task.next_run_time = datetime.utcnow() + timedelta(seconds=data['send_frequency'])
     db.session.add(task)
     db.session.commit()
     return jsonify({'message': 'Task created successfully'}), 201
