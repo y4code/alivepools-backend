@@ -1,7 +1,9 @@
+from datetime import datetime
 from flask import Flask, jsonify, request, Blueprint
 from flask_jwt_extended import JWTManager, create_access_token
 import random
 from .email import send_custom_email
+from .database import create_user
 
 otp_storage = {}
 
@@ -29,13 +31,20 @@ def signin():
 def confirm_otp():
     email = request.json.get('email', None)
     otp = request.json.get('otp', None)
+
+    print(f"Email: {email}, OTP: {otp}")
     
     # 验证OTP
     if email in otp_storage and otp_storage[email] == otp:
+
+        # 验证成功后，使用 email，将 OTP 作为默认 password 创建一个新用户
+        create_user(email, otp)
+        
         # 清除OTP
         del otp_storage[email]
         # 创建JWT token
         token = create_access_token(identity=email)
+
         return jsonify(token=token), 200
     else:
         return jsonify({"message": "Unauthorized"}), 401

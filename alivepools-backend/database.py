@@ -12,9 +12,11 @@ bp = Blueprint('database', __name__)
 
 # Create a user
 @bp.route('/create_user', methods=['POST'])
-def create_user():
-    data = request.json
-    user = Users(email=data['email'], email_status=data['email_status'], password=data['password'], create_at=data['create_at'])
+def create_user(email, password):
+    # data = request.json
+    user = Users(email=email,
+                  email_status='verified',
+                  password=password)
     db.session.add(user)
     db.session.commit()
     return jsonify({'message': 'User created successfully'}), 201
