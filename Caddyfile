@@ -5,10 +5,11 @@ https://alivepools.siri.ink {
     }
     
     # 将所有其他请求代理到 Vercel
-    reverse_proxy /* https://alivepools-frontend.vercel.app {
+    reverse_proxy /* https://alivepools-frontend-nextjs.vercel.app {
         header_up Host {http.reverse_proxy.upstream.hostport}
         header_up X-Real-IP {http.request.remote.host}
         header_up X-Forwarded-For {http.request.remote}
         header_up X-Forwarded-Proto {http.request.scheme}
     }
+
 }
