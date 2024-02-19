@@ -48,13 +48,14 @@ def create_app(test_config=None):
     bp = Blueprint('my_blueprint', __name__)
     app.register_blueprint(bp)
 
-    from . import auth, domain, email, model, database, job
+    from . import auth, domain, email, model, database, job, user
     app.register_blueprint(auth.bp)
     app.register_blueprint(domain.bp)
     app.register_blueprint(email.bp)
     app.register_blueprint(model.bp)
     app.register_blueprint(database.bp)
     app.register_blueprint(job.bp)
+    app.register_blueprint(user.bp)
 
     return app
 

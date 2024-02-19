@@ -4,7 +4,7 @@ from flask import request, jsonify, Blueprint
 from .model import Users
 
 # Create a blueprint
-bp = Blueprint('auth', __name__)
+bp = Blueprint('user', __name__)
 
 @bp.route('/login', methods=['POST'])
 def login(email, password):
