@@ -30,6 +30,15 @@ def query_users():
         users_list.append({'email': user.email, 'email_status': user.email_status})
     return jsonify({'users': users_list}), 200
 
+def user_exists(email):
+    """
+    检查数据库中是否已存在给定邮箱的用户。
+    """
+    user = Users.query.filter_by(email=email).first()
+    if user:
+        return True
+    return False
+
 # Query a user by id
 @bp.route('/query_user_by_id/<int:id>', methods=['GET'])
 def query_user_by_id(id):
