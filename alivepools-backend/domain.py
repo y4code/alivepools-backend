@@ -6,7 +6,7 @@ import requests
 # Create a blueprint
 bp = Blueprint('domain', __name__)
 
-@bp.route("/domain", methods=["GET"])
+@bp.route("/domain", methods=["POST"])
 def check_by_domain():
     website = request.json.get("website")
     try:
