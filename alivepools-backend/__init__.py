@@ -5,11 +5,10 @@ import os
 from flask import Flask, Blueprint
 from flask_jwt_extended import JWTManager
 from apscheduler.schedulers.background import BackgroundScheduler
-
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 db = SQLAlchemy()
-
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -19,6 +18,9 @@ def create_app(test_config=None):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
    
     db.init_app(app)
+
+    # Enable CORS
+    CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
     # 初始化 APScheduler 并注册定时任务
     from .scheduler import init_scheduler
