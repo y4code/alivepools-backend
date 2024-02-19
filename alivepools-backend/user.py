@@ -7,30 +7,44 @@ from pymysql import IntegrityError
 from .email import send_custom_email
 from .database import create_user, user_exists
 from .model import Users
-from .otp import generate_code_by_key, verify_code, otp_storage, verification_code_prefix, email_password_pair_prefix, setStorageByKey, getStorageByKey, delByKey, check_key_in_storage
+from .otp import (
+    generate_code_by_key,
+    verify_code,
+    otp_storage,
+    verification_code_prefix,
+    email_password_pair_prefix,
+    setStorageByKey,
+    getStorageByKey,
+    delByKey,
+    check_key_in_storage,
+)
 import re
 
-bp = Blueprint('user', __name__)
+bp = Blueprint("user", __name__)
+
 
 def validate_email(email):
-    pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
     if not re.match(pattern, email):
         return False
     return True
+
 
 def validate_password(password):
     if len(password) < 8:
         return False
     return True
 
-@bp.route('/user/signup', methods=['POST'])
+
+@bp.route("/user/signup", methods=["POST"])
 def register():
     """
     required: `email`, `password`
+
     """
     data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
+    email = data.get("email")
+    password = data.get("password")
     if not email or not password:
         return jsonify({"message": "Email and password are required"}), 400
     if not validate_email(email):
@@ -45,14 +59,15 @@ def register():
     send_custom_email(email, subject, body)
     return jsonify({"message": "Verification code sent successfully"}), 200
 
-@bp.route('/user/signup/confirmation', methods=['POST'])
+
+@bp.route("/user/signup/confirmation", methods=["POST"])
 def register_confirmation():
     """
     required: `email`, `code`
     """
     data = request.get_json()
-    email = data.get('email', '').strip()
-    code = data.get('code', '').strip()
+    email = data.get("email", "").strip()
+    code = data.get("code", "").strip()
 
     if not email or not code:
         return jsonify({"message": "Email and code are required"}), 400
@@ -63,7 +78,7 @@ def register_confirmation():
     pair = email_password_pair_prefix + email
 
     if verify_code(email, code) and check_key_in_storage(pair):
-        if user_exists(email):  # 使用user_exists函数检查用户是否存在
+        if user_exists(email):
             return jsonify({"message": "Email already in use"}), 400
         password = getStorageByKey(pair)
         try:
@@ -77,16 +92,14 @@ def register_confirmation():
         return jsonify({"message": "Bad email or code"}), 400
 
 
-
-
-@bp.route('/user/signin', methods=['POST'])
+@bp.route("/user/signin", methods=["POST"])
 def login():
     """
     requied: `email`, `password`
     """
     data = request.get_json()
-    email = data.get('email') or ''
-    password = data.get('password') or ''
+    email = data.get("email") or ""
+    password = data.get("password") or ""
     if not validate_email(email):
         return jsonify({"message": "Invalid email"}), 400
     if not validate_password(password):
@@ -98,4 +111,3 @@ def login():
 
     token = create_access_token(identity=email)
     return jsonify(token=token), 200
-

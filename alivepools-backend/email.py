@@ -4,7 +4,8 @@ from flask import Flask, jsonify, Blueprint, request
 import requests
 
 # Create a blueprint object
-bp = Blueprint('email', __name__)
+bp = Blueprint("email", __name__)
+
 
 # Define another route within the blueprint
 def send_custom_email(recipient, subject, message):
@@ -16,8 +17,9 @@ def send_custom_email(recipient, subject, message):
             "from": "Excited User <mailgun@sandboxab84a42814d340b1929b218768aad10b.mailgun.org>",
             "to": [recipient],
             "subject": subject,
-            "text": message
-        })
+            "text": message,
+        },
+    )
 
     if response.status_code == 200:
         return "Email sent successfully!"

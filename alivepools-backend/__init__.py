@@ -10,13 +10,16 @@ from flask_cors import CORS
 
 db = SQLAlchemy()
 
+
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
 
     # Configuration for your database URI
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://doadmin:AVNS_XZO6vDqdYsFGGBA2G8W@db-mysql-sgp1-19924-do-user-15764718-0.c.db.ondigitalocean.com:25060/defaultdb'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-   
+    app.config["SQLALCHEMY_DATABASE_URI"] = (
+        "mysql+pymysql://doadmin:AVNS_XZO6vDqdYsFGGBA2G8W@db-mysql-sgp1-19924-do-user-15764718-0.c.db.ondigitalocean.com:25060/defaultdb"
+    )
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
     db.init_app(app)
 
     # Enable CORS
@@ -24,19 +27,20 @@ def create_app(test_config=None):
 
     # 初始化 APScheduler 并注册定时任务
     from .scheduler import init_scheduler
+
     init_scheduler()
 
     app.config.from_mapping(
-        SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+        SECRET_KEY="dev",
+        DATABASE=os.path.join(app.instance_path, "flaskr.sqlite"),
     )
 
-    app.config['JWT_SECRET_KEY'] = 'your_secret_key_here'
+    app.config["JWT_SECRET_KEY"] = "your_secret_key_here"
 
     jwt = JWTManager(app)
 
     if test_config is None:
-        app.config.from_pyfile('config.py', silent=True)
+        app.config.from_pyfile("config.py", silent=True)
     else:
         app.config.from_mapping(test_config)
 
@@ -45,10 +49,11 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    bp = Blueprint('my_blueprint', __name__)
+    bp = Blueprint("my_blueprint", __name__)
     app.register_blueprint(bp)
 
     from . import domain, email, model, database, job, user, otp
+
     app.register_blueprint(domain.bp)
     app.register_blueprint(email.bp)
     app.register_blueprint(model.bp)
@@ -58,5 +63,6 @@ def create_app(test_config=None):
     app.register_blueprint(otp.bp)
 
     return app
+
 
 app = create_app()

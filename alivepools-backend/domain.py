@@ -4,7 +4,8 @@ from flask import Flask, request, jsonify, Blueprint
 import requests
 
 # Create a blueprint
-bp = Blueprint('domain', __name__)
+bp = Blueprint("domain", __name__)
+
 
 @bp.route("/domain", methods=["POST"])
 def check_by_domain():
