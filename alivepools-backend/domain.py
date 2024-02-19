@@ -8,7 +8,7 @@ bp = Blueprint('domain', __name__)
 
 @bp.route("/domain", methods=["GET"])
 def check_by_domain():
-    website = request.args.get("website")
+    website = request.json.get("website")
     try:
         for _ in range(5):
             response = requests.get("http://" + website)
