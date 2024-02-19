@@ -13,13 +13,19 @@ pip3 freeze > requirements.txt
 ```
 
 # Run
+run local server
 ```shell
 flask --app alivepools-backend run
 ```
 
-or
+run on production server
 ```shell
 flask --app alivepools-backend run --host=0.0.0.0
+```
+
+run on production server with nohup
+```shell
+nohup flask --app alivepools-backend run --host=0.0.0.0 &
 ```
 
 # About Caddyfile
