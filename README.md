@@ -1,5 +1,7 @@
 # alivepools-backend
 
+[![Deploy alivepools-backend to Server](https://github.com/y4code/alivepools-backend/actions/workflows/deploy.yml/badge.svg)](https://github.com/y4code/alivepools-backend/actions/workflows/deploy.yml)
+
 # Install
 ```shell
 python3 -m venv venv
