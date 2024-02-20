@@ -29,6 +29,10 @@ jobs:
           source venv/bin/activate &&
           pip3 install -r requirements.txt &&
           # 停止当前正在运行的应用（根据你的具体情况调整命令）
-          pkill -f 'flask --app alivepools-backend' || true &&
-          # 以nohup方式在后台运行应用
-          nohup flask --app alivepools-backend run --host=0.0.0.0 &"
+          echo 'Stopping the current running application...'
+          # pkill -f 'flask --app alivepools-backend' || true &&
+          kill -9 $(lsof -t -i:5000) || true &&
+          echo 'Starting the application...'
+          nohup flask --app alivepools-backend run --host=0.0.0.0 > nohup.out 2>&1 < /dev/null &
+          echo 'Deployment completed successfully.'
+          "
