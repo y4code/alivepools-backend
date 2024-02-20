@@ -20,7 +20,7 @@ from .otp import (
 )
 import re
 
-bp = Blueprint("user", __name__)
+bp = Blueprint("user_api", __name__)
 
 
 def validate_email(email):

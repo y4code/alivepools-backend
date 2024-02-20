@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify, Blueprint
 import requests
 
 # Create a blueprint
-bp = Blueprint("domain", __name__)
+bp = Blueprint("domain_api", __name__)
 
 
 @bp.route("/domain", methods=["POST"])
