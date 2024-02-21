@@ -80,32 +80,32 @@ paths:
                     type: string
         "404":
           description: Not found
-  /job/{jobId}:
+  /task/{taskId}:
     get:
       tags:
-        - "Job"
-      summary: Get job by ID
+        - "Task"
+      summary: Get task by ID
       parameters:
-        - name: jobId
+        - name: taskId
           in: path
           required: true
           schema:
             type: string
       responses:
         "200":
-          description: Job details retrieved successfully
+          description: Task details retrieved successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Job"
+                $ref: "#/components/schemas/Task"
         "404":
-          description: Job not found
+          description: Task not found
     put:
       tags:
-        - "Job"
-      summary: Update job by ID
+        - "Task"
+      summary: Update task by ID
       parameters:
-        - name: jobId
+        - name: taskId
           in: path
           required: true
           schema:
@@ -115,53 +115,53 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Job"
+              $ref: "#/components/schemas/Task"
       responses:
         "200":
-          description: Job updated successfully
+          description: Task updated successfully
     delete:
       tags:
-        - "Job"
-      summary: Delete job by ID
+        - "Task"
+      summary: Delete task by ID
       parameters:
-        - name: jobId
+        - name: taskId
           in: path
           required: true
           schema:
             type: string
       responses:
         "200":
-          description: Job deleted successfully
-  /jobs:
+          description: Task deleted successfully
+  /tasks:
     get:
       tags:
-        - "Job"
-      summary: Get all jobs
+        - "Task"
+      summary: Get all tasks
       responses:
         "200":
-          description: Jobs list retrieved successfully
+          description: Tasks list retrieved successfully
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Job"
+                  $ref: "#/components/schemas/Task"
     post:
       tags:
-        - "Job"
-      summary: Create a new job
+        - "Task"
+      summary: Create a new task
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Job"
+              $ref: "#/components/schemas/Task"
       responses:
         "200":
-          description: New job created successfully
+          description: New task created successfully
 components:
   schemas:
-    Job:
+    Task:
       type: object
       properties:
         id:

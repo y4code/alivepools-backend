@@ -53,14 +53,14 @@ def create_app(test_config=None):
     bp = Blueprint("my_blueprint", __name__)
     app.register_blueprint(bp)
 
-    from . import domain_api, email, model, database, job, job_api, user_api, otp
+    from . import domain_api, email, model, database, task, task_api, user_api, otp
 
     app.register_blueprint(domain_api.bp)
     app.register_blueprint(email.bp)
     app.register_blueprint(model.bp)
     app.register_blueprint(database.bp)
-    app.register_blueprint(job.bp)
-    app.register_blueprint(job_api.bp)
+    app.register_blueprint(task.bp)
+    app.register_blueprint(task_api.bp)
     app.register_blueprint(user_api.bp)
     app.register_blueprint(otp.bp)
 

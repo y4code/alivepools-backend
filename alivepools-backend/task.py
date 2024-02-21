@@ -10,11 +10,11 @@ from flask import current_app
 
 
 # Create a blueprint
-bp = Blueprint("job", __name__)
+bp = Blueprint("task", __name__)
 
 
 # TODO 未调试
-def execute_jobs():
+def execute_tasks():
     from . import app
 
     with app.app_context():
@@ -26,7 +26,7 @@ def execute_jobs():
         for task in tasks:
             print(f"Executing task {task.id}")
             send_custom_email(
-                "yaoyishi@gmail.com", subject="Job Test", message="This is a test email"
+                "yaoyishi@gmail.com", subject="Task Test", message="This is a test email"
             )
 
             task.last_run_time = now
