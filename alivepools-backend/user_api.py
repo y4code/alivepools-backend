@@ -82,9 +82,9 @@ def register_confirmation():
             return jsonify({"message": "Email already in use"}), 400
         password = getStorageByKey(pair)
         try:
-            create_user(email, password)
+            user = create_user(email, password)
             delByKey(pair)
-            token = create_access_token(identity=email)
+            token = create_access_token(identity=user.id)
             return jsonify(token=token), 200
         except IntegrityError as e:
             return jsonify({"message": "An unexpected error occurred"}), 500
@@ -109,5 +109,5 @@ def login():
     if not user or user.password != password:
         return jsonify({"message": "Bad email or password"}), 401
 
-    token = create_access_token(identity=email)
+    token = create_access_token(identity=user.id)
     return jsonify(token=token), 200

@@ -15,16 +15,16 @@ bp = Blueprint("task_api", __name__)
 @jwt_required()
 def get_all_tasks():
     print(get_jwt_identity())
-    current_user = get_jwt_identity()
-    tasks = query_tasks_by_user_id(current_user)
+    current_user_id = get_jwt_identity()
+    tasks = query_tasks_by_user_id(current_user_id)
     return jsonify(tasks=[task.to_dict() for task in tasks]), 200
 
 
 @bp.route("/task/<taskId>", methods=["GET"])
 @jwt_required()
 def get_task_by_id(taskId: str):
-    current_user = get_jwt_identity()
-    task = query_task_by_id(taskId, current_user)
+    current_user_id = get_jwt_identity()
+    task = query_task_by_id(taskId, current_user_id)
     if task is None:
         return jsonify(error="Task not found"), 404
     return jsonify(task=task.to_dict()), 200
@@ -33,9 +33,9 @@ def get_task_by_id(taskId: str):
 @bp.route("/task/<taskId>", methods=["PUT"])
 @jwt_required()
 def update_task_by_id(taskId):
-    current_user = get_jwt_identity()
+    current_user_id = get_jwt_identity()
     task_data = request.get_json()
-    success = update_task(taskId, task_data, current_user)
+    success = update_task(taskId, task_data, current_user_id)
     if success:
         return jsonify(success=True), 200
     else:
@@ -45,8 +45,8 @@ def update_task_by_id(taskId):
 @bp.route("/task/<taskId>", methods=["DELETE"])
 @jwt_required()
 def delete_task_by_id(taskId):
-    current_user = get_jwt_identity()
-    if delete_task(taskId, current_user):
+    current_user_id = get_jwt_identity()
+    if delete_task(taskId, current_user_id):
         return jsonify(success=True), 204
     else:
         return jsonify(error="Task not found or unauthorized"), 404
