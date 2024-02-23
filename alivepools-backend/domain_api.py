@@ -1,9 +1,12 @@
-# 域名的可用性检查
-
 from flask import Flask, request, jsonify, Blueprint
 import requests
+from .response import (
+    CODE_WEBSITE_NOT_AVAILABLE,
+    CODE_WEBSITE_NOT_FOUND,
+    response_ok,
+    response_error,
+)
 
-# Create a blueprint
 bp = Blueprint("domain_api", __name__)
 
 
@@ -13,11 +16,8 @@ def check_by_domain():
     try:
         for _ in range(5):
             response = requests.get("http://" + website)
-            # If the GET request is successful, the website is available
             if response.status_code == 200:
-                return jsonify({"message": "Website is available"}), 200
-        # If all requests fail, the website is considered not available
-        return jsonify({"message": "Website is not available"}), 200
+                return response_ok(None)
+        return response_error(None, CODE_WEBSITE_NOT_AVAILABLE, "Website not available")
     except requests.exceptions.RequestException:
-        # If the GET request fails (e.g., due to a network problem or invalid URL), the website is considered not found
-        return jsonify({"message": "Website not found"}), 200
+        return response_error(None, CODE_WEBSITE_NOT_FOUND, "Website not found")

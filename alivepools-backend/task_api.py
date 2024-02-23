@@ -7,6 +7,11 @@ from .database import (
     query_tasks_by_user_id,
     update_task,
 )
+from .response import (
+    CODE_TASK_NOT_FOUND,
+    response_ok,
+    response_error,
+)  # Ensure this import is correct
 
 bp = Blueprint("task_api", __name__)
 
@@ -14,10 +19,9 @@ bp = Blueprint("task_api", __name__)
 @bp.route("/tasks", methods=["GET"])
 @jwt_required()
 def get_all_tasks():
-    print(get_jwt_identity())
     current_user_id = get_jwt_identity()
     tasks = query_tasks_by_user_id(current_user_id)
-    return jsonify(tasks=[task.to_dict() for task in tasks]), 200
+    return response_ok([task.to_dict() for task in tasks])
 
 
 @bp.route("/task/<taskId>", methods=["GET"])
@@ -26,8 +30,8 @@ def get_task_by_id(taskId: str):
     current_user_id = get_jwt_identity()
     task = query_task_by_id(taskId, current_user_id)
     if task is None:
-        return jsonify(error="Task not found"), 404
-    return jsonify(task=task.to_dict()), 200
+        return response_error(None, CODE_TASK_NOT_FOUND, "Task not found")
+    return response_ok(task.to_dict())
 
 
 @bp.route("/task/<taskId>", methods=["PUT"])
@@ -37,9 +41,9 @@ def update_task_by_id(taskId):
     task_data = request.get_json()
     success = update_task(taskId, task_data, current_user_id)
     if success:
-        return jsonify(success=True), 200
+        return response_ok(None)
     else:
-        return jsonify(error="Task not found or unauthorized"), 404
+        return response_error(None, CODE_TASK_NOT_FOUND, "Task not found")
 
 
 @bp.route("/task/<taskId>", methods=["DELETE"])
@@ -47,6 +51,6 @@ def update_task_by_id(taskId):
 def delete_task_by_id(taskId):
     current_user_id = get_jwt_identity()
     if delete_task(taskId, current_user_id):
-        return jsonify(success=True), 204
+        return response_ok(None)
     else:
-        return jsonify(error="Task not found or unauthorized"), 404
+        return response_error(None, CODE_TASK_NOT_FOUND, "Task not found")
