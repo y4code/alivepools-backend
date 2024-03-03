@@ -112,7 +112,7 @@ def register_confirmation():
 @bp.route("/user/signin", methods=["POST"])
 def login():
     """
-    requied: `email`, `password`
+    required: `email`, `password`
     """
     data = request.get_json()
     email = data.get("email") or ""
@@ -129,4 +129,5 @@ def login():
         )
 
     token = create_access_token(identity=user.id)
-    return response_ok({"token": token})
+    user_data = user.to_dict()
+    return response_ok({"token": token, "user": user_data})
