@@ -14,12 +14,12 @@ pip3 install -r requirements.txt
 
 **Local**
 ```shell
-flask --app alivepools-backend run
+flask --app alivepools-backend run -p 8000
 ```
 
 **Production**
 ```shell
-flask --app alivepools-backend run --host=0.0.0.0
+flask --app alivepools-backend run --host=0.0.0.0:8000
 ```
 
 **Production with `systemd` (Recommend)**

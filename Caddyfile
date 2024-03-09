@@ -1,7 +1,7 @@
 https://alivepools.siri.ink {
     # 将 /api/ 请求代理到后端服务器，并移除 /api/ 前缀
     handle_path /api/* {
-        reverse_proxy http://localhost:5000
+        reverse_proxy http://localhost:8000
     }
     
     # 将所有其他请求代理到 Vercel
