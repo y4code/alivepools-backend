@@ -2,36 +2,46 @@
 
 [![Deploy alivepools-backend to Server](https://github.com/y4code/alivepools-backend/actions/workflows/deploy.yml/badge.svg)](https://github.com/y4code/alivepools-backend/actions/workflows/deploy.yml)
 
-# Install
+## How to Run
+
+Install dependencies
+
 ```shell
 python3 -m venv venv
 source venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
-# Freeze dependencies
-```shell
-pip3 freeze > requirements.txt
-```
-
-# Run
-run local server
+**Local**
 ```shell
 flask --app alivepools-backend run
 ```
 
-run on production server
+**Production**
 ```shell
 flask --app alivepools-backend run --host=0.0.0.0
 ```
 
-run on production server with nohup
+**Production with `systemd` (Recommend)**
+
+Put [alivepools-backend.service](alivepools-backend.service) in `/etc/systemd/system/`, run `daemon-reload`, `enable` and `start` command before command below
+
 ```shell
-nohup flask --app alivepools-backend run --host=0.0.0.0 &
+sudo systemctl restart alivepools-backend.service
 ```
 
-# About Caddyfile
-Just run command below to start caddy server in background
+## Cheatsheet
+
+**Freeze dependencies**
+
+```shell
+pip3 freeze > requirements.txt
+```
+
+**Caddyfile**
+
+check [Caddyfile](Caddyfile) for more details
+
 ```shell
 caddy start
 ```

@@ -21,18 +21,14 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.DEPLOY_KEY }}
 
-    - name: Deploy project using git pull
+    - name: Deploy project using systemd
       run: |
         ssh -o StrictHostKeyChecking=no root@157.230.193.169 "
           cd /root/alivepools-backend &&
           git pull &&
           source venv/bin/activate &&
           pip3 install -r requirements.txt &&
-          # 停止当前正在运行的应用（根据你的具体情况调整命令）
-          echo 'Stopping the current running application...'
-          # pkill -f 'flask --app alivepools-backend' || true &&
-          kill -9 $(lsof -t -i:5000) || true &&
-          echo 'Starting the application...'
-          nohup flask --app alivepools-backend run --host=0.0.0.0 > nohup.out 2>&1 < /dev/null &
+          sudo systemctl restart alivepools-backend.service &&
           echo 'Deployment completed successfully.'
           "
+
