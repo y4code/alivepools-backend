@@ -27,7 +27,7 @@ def user_exists(email):
     return Users.query.filter_by(email=email).first() is not None
 
 
-def query_user_by_id(id):
+def query_user_by_id(id: int):
     return Users.query.get(id)
 
 
@@ -78,12 +78,28 @@ def query_task_by_id(id) -> Tasks:
     return Tasks.query.get(id)
 
 
-def query_task_by_id(id: str, user_id: int) -> Optional[Tasks]:
+def query_task_by_id_and_userid(id: str, user_id: int) -> Optional[Tasks]:
     return Tasks.query.filter_by(id=id, user_id=user_id).first()
 
 
 def query_tasks_by_user_id(id) -> List[Tasks]:
     return Tasks.query.filter_by(user_id=id).all()
+
+
+def add_task(user_id, domain, email, send_frequency, status):
+    task = Tasks(
+        user_id=user_id,
+        domain=domain,
+        email=email,
+        send_frequency=send_frequency,
+        status=status,
+    )
+    task.last_run_time = datetime.utcnow()
+    task.next_run_time = datetime.utcnow() + timedelta(seconds=send_frequency)
+    task.created_at = datetime.utcnow()
+    db.session.add(task)
+    db.session.commit()
+    return task
 
 
 def update_task(id, task_data, user_id):
