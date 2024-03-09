@@ -6,7 +6,7 @@ After=network.target
 User=root
 WorkingDirectory=/root/alivepools-backend
 Environment="PATH=/root/alivepools-backend/venv/bin"
-ExecStart=/root/alivepools-backend/venv/bin/flask --app alivepools-backend run --host=0.0.0.0
+ExecStart=/root/alivepools-backend/venv/bin/gunicorn --workers 3 --bind 0.0.0.0:5000 alivepools-backend:app
 Restart=on-failure
 
 [Install]
