@@ -42,7 +42,13 @@ def create_task():
     current_user_id = get_jwt_identity()
     task_data = request.get_json()
     task_data["email"] = query_user_by_id(current_user_id).email
-    task = add_task(current_user_id, task_data["domain"], task_data["email"], task_data["send_frequency"], task_data["status"])
+    task = add_task(
+        current_user_id,
+        task_data["domain"],
+        task_data["email"],
+        task_data["send_frequency"],
+        task_data["status"],
+    )
     return response_ok(task.to_dict())
 
 

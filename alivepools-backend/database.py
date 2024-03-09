@@ -83,7 +83,7 @@ def query_task_by_id_and_userid(id: str, user_id: int) -> Optional[Tasks]:
 
 
 def query_tasks_by_user_id(id) -> List[Tasks]:
-    return Tasks.query.filter_by(user_id=id).all()
+    return Tasks.query.filter_by(user_id=id).order_by(Tasks.created_at.desc()).all()
 
 
 def add_task(user_id, domain, email, send_frequency, status):
