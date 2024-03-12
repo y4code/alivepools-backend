@@ -82,6 +82,9 @@ def query_task_by_id_and_userid(id: str, user_id: int) -> Optional[Tasks]:
     return Tasks.query.filter_by(id=id, user_id=user_id).first()
 
 
+def query_task_by_domain_and_userid(domain: str, user_id: int) -> Optional[Tasks]:
+    return Tasks.query.filter_by(domain=domain, user_id=user_id).first()
+
 def query_tasks_by_user_id(id) -> List[Tasks]:
     return Tasks.query.filter_by(user_id=id).order_by(Tasks.created_at.desc()).all()
 

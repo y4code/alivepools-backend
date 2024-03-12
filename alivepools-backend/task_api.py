@@ -4,12 +4,14 @@ from .database import (
     add_task,
     delete_task,
     delete_user_by_id,
+    query_task_by_domain_and_userid,
     query_task_by_id_and_userid,
     query_tasks_by_user_id,
     query_user_by_id,
     update_task,
 )
 from .response import (
+    CODE_TASK_ALREADY_EXISTS,
     CODE_TASK_NOT_FOUND,
     response_ok,
     response_error,
@@ -42,6 +44,15 @@ def create_task():
     current_user_id = get_jwt_identity()
     task_data = request.get_json()
     task_data["email"] = query_user_by_id(current_user_id).email
+
+    existing_task = query_task_by_domain_and_userid(
+        task_data["domain"], current_user_id
+    )
+    if existing_task:
+        return response_error(
+            None, CODE_TASK_ALREADY_EXISTS, "Task with the same domain already exists"
+        )
+
     task = add_task(
         current_user_id,
         task_data["domain"],
