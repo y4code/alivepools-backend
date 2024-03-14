@@ -11,7 +11,7 @@
  Target Server Version : 80030
  File Encoding         : 65001
 
- Date: 14/03/2024 04:01:41
+ Date: 14/03/2024 04:14:41
 */
 
 SET NAMES utf8mb4;
@@ -28,7 +28,7 @@ CREATE TABLE "tasks" (
   "email" varchar(255) NOT NULL,
   "send_frequency" int DEFAULT NULL,
   "created_at" datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  "status" enum('active','deactivate') NOT NULL DEFAULT 'active',
+  "status" enum('active','inactive') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'active',
   "last_run_time" datetime DEFAULT NULL,
   PRIMARY KEY ("id"),
   KEY "user_id" ("user_id"),
