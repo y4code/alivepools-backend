@@ -28,11 +28,10 @@ class Tasks(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     domain = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
-    send_frequency = db.Column(db.String(50), nullable=False)
+    send_frequency = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     status = db.Column(db.Enum("active", "deactive"), nullable=False)
     last_run_time = db.Column(db.DateTime, server_default=db.func.now())
-    next_run_time = db.Column(db.DateTime, server_default=db.func.now())
     user = db.relationship("Users", backref=db.backref("tasks", lazy=True))
 
     def to_dict(self):
@@ -45,5 +44,4 @@ class Tasks(db.Model):
             "created_at": self.created_at,
             "status": self.status,
             "last_run_time": self.last_run_time,
-            "next_run_time": self.next_run_time,
         }

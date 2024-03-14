@@ -3,10 +3,10 @@
 from typing import List, Optional
 from flask import Flask, jsonify, request, Blueprint
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 from . import db
 from .model import Users, Tasks
 from datetime import datetime, timedelta
-from flask import current_app
 
 bp = Blueprint("database", __name__)
 
@@ -68,7 +68,6 @@ def create_task(user_id, domain, email, send_frequency, status):
         status=status,
     )
     task.last_run_time = datetime.utcnow()
-    task.next_run_time = datetime.utcnow() + timedelta(seconds=send_frequency)
     db.session.add(task)
     db.session.commit()
     return task
@@ -85,8 +84,22 @@ def query_task_by_id_and_userid(id: str, user_id: int) -> Optional[Tasks]:
 def query_task_by_domain_and_userid(domain: str, user_id: int) -> Optional[Tasks]:
     return Tasks.query.filter_by(domain=domain, user_id=user_id).first()
 
+
 def query_tasks_by_user_id(id) -> List[Tasks]:
     return Tasks.query.filter_by(user_id=id).order_by(Tasks.created_at.desc()).all()
+
+
+# SELECT * FROM tasks WHERE status = 'active' AND TIMESTAMPDIFF(SECOND, last_run_time, NOW()) >= send_frequency;
+def query_due_tasks_by_status(status) -> List[Tasks]:
+    tasks = (
+        Tasks.query.filter(
+            Tasks.status == status,
+            text("TIMESTAMPDIFF(SECOND, last_run_time, NOW()) >= send_frequency"),
+        )
+        .order_by(Tasks.last_run_time)
+        .all()
+    )
+    return tasks
 
 
 def add_task(user_id, domain, email, send_frequency, status):
@@ -98,7 +111,6 @@ def add_task(user_id, domain, email, send_frequency, status):
         status=status,
     )
     task.last_run_time = datetime.utcnow()
-    task.next_run_time = datetime.utcnow() + timedelta(seconds=send_frequency)
     task.created_at = datetime.utcnow()
     db.session.add(task)
     db.session.commit()
