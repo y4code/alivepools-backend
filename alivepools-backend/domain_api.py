@@ -1,11 +1,11 @@
-from flask import Flask, request, jsonify, Blueprint
-import requests
+from flask import request, Blueprint
 from .response import (
     CODE_WEBSITE_NOT_AVAILABLE,
     CODE_WEBSITE_NOT_FOUND,
     response_ok,
     response_error,
 )
+from .domain import check_website_availability
 
 bp = Blueprint("domain_api", __name__)
 
@@ -13,15 +13,8 @@ bp = Blueprint("domain_api", __name__)
 @bp.route("/domain", methods=["POST"])
 def check_by_domain():
     website = request.json.get("website")
-    if not website.startswith(("http://", "https://")):
-        website = "http://" + website
-    try:
-        for _ in range(5):
-            response = requests.get(website)
-            if response.status_code == 200:
-                return response_ok(None)
-
-    except requests.exceptions.RequestException:
+    is_website_available = check_website_availability(website)
+    if is_website_available:
+        return response_ok(None)
+    else:
         return response_error(None, CODE_WEBSITE_NOT_FOUND, "Website not found")
-
-    return response_error(None, CODE_WEBSITE_NOT_AVAILABLE, "Website not available")
